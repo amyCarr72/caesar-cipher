@@ -1,10 +1,13 @@
 #include <iostream>
 // Include the string header
 #include <string>
+// We wanted to create a delay and we searched about it in google and found that
+// the header <thread> and <chrono> are needed to have the delay Include for
+// sleep_for function
+#include <thread>
+// Include for defining time durations
+#include <chrono> 
 using namespace std;
-// Include the limits header for std::numeric_limits
-// We researched this header and found it to be helpful for the user to know what the max and min values of the integer data type are
-#include <limits> 
 
 int main() {
 
@@ -15,10 +18,19 @@ int main() {
     char willPlayAgain;
     string characterOptions[5] = {"Witch", "Vampire", "Ghost", "Bat", "Werewolf"};
 
+
     do {
+        // Display a halloween-themed welcome message
+        cout << "Welcome to the Halloween Secret Message Service!"<< endl;
+
+        // Introduce a delay of 3 seconds before showing the ASCII art
+        this_thread::sleep_for(chrono::seconds(2));
+
+        // Display with some Halloween-themed ASCII art
         asciiArt();
+
          // Choose a character by the user
-        std::cout << "\nChoose your character to help send your secret message:" << endl;
+        cout << "\nChoose your character to help send your secret message:" << endl;
 
         //print out the 5 options for characters
         for(int i=1; i<= 5; i++) {
@@ -26,57 +38,58 @@ int main() {
         }
 
         // Get user input for choice with validation
-        std::cout << "Enter the number of your character choice:" << endl;
+        cout << "Enter the number of your character choice:" << endl;
         int choice;
-        do {
-            cin >> choice;
-
-            // Check if the choice user is wrong and ask then put the right one
-            if (choice < 1 || choice > 5) {
-                std::cout << "Invalid choice! Please choose a number between 1 and 5." << endl;
-            }
-        } while (choice < 1 || choice > 5);
+        while (!(cin >> choice) ||  choice < 1 || choice > 5 ) {
+            cout << "Invalid choice! Please choose a number between 1 and 5." << endl;
+            cin.clear(); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
 
         // Display the selected character
-        std::cout << "You chose: " << characterOptions[choice-1] << endl;
+        cout << "You chose: " << characterOptions[choice-1] << endl;
 
-        // Clear the input buffer before taking string input
-        // Makes the output wait for the getline input we ask for below.
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+       // Clear the input buffer before taking string input
+        cin.ignore();
 
         // Get message from user
-        std::cout << "Enter your spooky message:" << endl;
+        cout << "Enter your spooky message:" << endl;
         string message;
-        getline(std::cin, message); // Use getline to read the entire line
+        getline(cin, message); // Use getline to read the entire line
 
         // Get shift value from user
+        cout << "Enter the shift number:" << endl;
         int shift;
-        std::cout << "Enter the shift value:" << endl;
-        std::cin >> shift;
+        while (!(cin >> shift)) {
+            cout << "Please enter a number for your cipher!" << endl;
+            cin.clear(); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
 
         // Encode the message
         string encodedMessage = caesarCipherRecursive(message, shift);
 
         // Display the encoded message
-        std::cout << "\nYour secret Halloween message is: " << encodedMessage << " "
-                << std::endl;
+        cout << "\nYour secret Halloween message is: " << encodedMessage << " "
+                << endl;
 
         // Ask if the user wants to play again
-        std::cout << "\nWould you like to play again? (y/n):" << std::endl;
-        std::cin >> willPlayAgain;
+        cout << "\nWould you like to play again? (y/n):" << endl;
+        cin >> willPlayAgain;
+
     } while (willPlayAgain == 'Y' || willPlayAgain == 'y');
 
     // Ending Exit Message
-    std::cout << "Thank you for using the Halloween Secret Message Service! See "
+    cout << "Thank you for using the Halloween Secret Message Service! See "
                 "you soon!"
-                << std::endl;
+                << endl;
     return 0;
 }
 
 
 // Function to encode a message using Caesar Cipher
-string caesarCipherRecursive(std::string message, int shift) {
-  std::string encodedMessage = "";
+string caesarCipherRecursive(string message, int shift) {
+  string encodedMessage = "";
   if (message.length() == 0) {
     return encodedMessage;
   }
@@ -97,44 +110,44 @@ string caesarCipherRecursive(std::string message, int shift) {
 
 // Display with some Halloween-themed ASCII art
 void asciiArt() {
-    std::cout
+    cout
         << "                                          ,          ^'^       _"
-        << std::endl;
-    std::cout << "                                               (             "
+        << endl;
+    cout << "                                               (             "
                  " (_) ^'^                                          )"
-              << std::endl;
-    std::cout << "          _/\\_                    .---------. ((        ^'^"
-              << std::endl;
-    std::cout
+              << endl;
+    cout << "          _/\\_                    .---------. ((        ^'^"
+              << endl;
+    cout
         << "          (('>                    )`'`'`'`'`( ||                "
-        << std::endl;
-    std::cout
+        << endl;
+    cout
         << "    _     /^|                    /`'`'`'`'`'`\\||           ^'^"
-        << std::endl;
-    std::cout << "     =>--/__|m---               /`'`'`'`'`'`'`\\|"
-              << std::endl;
-    std::cout << "          ^^                   /`'`'`'`'`'`'`'`\\"
-              << std::endl;
-    std::cout << "                      ,,,,,,, /`'`'`'`'`'`'`'`'`\\      '"
-              << std::endl;
-    std::cout << "                     .-------,`|```````````````|`  .   )"
-              << std::endl;
-    std::cout << "                    / .^. .^. \\|   ,^^, ,^^,   |  / \\ (("
-              << std::endl;
-    std::cout << "                   /  |_| |_|  \\   |__| |__|   | /,-,\\||"
-              << std::endl;
-    std::cout << "        __        /_____________\\  |*)| |  |   |/ |_| \\|"
-              << std::endl;
-    std::cout << "       ('')        |  __   __  |   '==' '=='   /_______\\    __"
-              << std::endl;
-    std::cout << "      ('  ')       | /  \\ /  \\ |    _______    |,^, ,^,|   ('')"
-              << std::endl;
-    std::cout << "       \\   \\       | |--| |--| |   ((--.--))   ||_| |_||  ('  ')"
-              << std::endl;
-    std::cout << "     _  ^^^^ _     | |__| |('| |   ||  |  ||   |,-, ,-,|  /   /"
-              << std::endl;
-    std::cout << "   ,' ',   ,' ',   |           |   ||  |  ||   ||_| |_||  ^^^^  "
-              << std::endl;
-    std::cout << ".,,|RIP|,.,|RIP|,.,'==========='===''=='==''==='=======',,....,,,,.,"
-              << std::endl;
+        << endl;
+    cout << "     =>--/__|m---               /`'`'`'`'`'`'`\\|"
+              << endl;
+    cout << "          ^^                   /`'`'`'`'`'`'`'`\\"
+              << endl;
+    cout << "                      ,,,,,,, /`'`'`'`'`'`'`'`'`\\      '"
+              << endl;
+    cout << "                     .-------,`|```````````````|`  .   )"
+              << endl;
+    cout << "                    / .^. .^. \\|   ,^^, ,^^,   |  / \\ (("
+              << endl;
+    cout << "                   /  |_| |_|  \\   |__| |__|   | /,-,\\||"
+              << endl;
+    cout << "        __        /_____________\\  |*)| |  |   |/ |_| \\|"
+              << endl;
+    cout << "       ('')        |  __   __  |   '==' '=='   /_______\\    __"
+              << endl;
+    cout << "      ('  ')       | /  \\ /  \\ |    _______    |,^, ,^,|   ('')"
+              << endl;
+    cout << "       \\   \\       | |--| |--| |   ((--.--))   ||_| |_||  ('  ')"
+              << endl;
+    cout << "     _  ^^^^ _     | |__| |('| |   ||  |  ||   |,-, ,-,|  /   /"
+              << endl;
+    cout << "   ,' ',   ,' ',   |           |   ||  |  ||   ||_| |_||  ^^^^  "
+              << endl;
+    cout << ".,,|RIP|,.,|RIP|,.,'==========='===''=='==''==='=======',,....,,,,.,"
+              << endl;
 }
